@@ -1,0 +1,6 @@
+{
+  "name": "elm-ffi-browser",
+  "devDependencies": {
+    "elm-ffi": "github:pravdomil/elm-ffi"
+  }
+}
