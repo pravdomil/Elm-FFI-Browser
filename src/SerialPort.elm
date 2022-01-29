@@ -55,6 +55,9 @@ write data a =
                     JavaScriptError (JavaScript.Exception "TypeError" _ _) ->
                         Busy
 
+                    JavaScriptError (JavaScript.Exception "NetworkError" _ _) ->
+                        Disconnected
+
                     _ ->
                         v
             )
@@ -153,6 +156,7 @@ parityToString a =
 type Error
     = NotSupported
     | Busy
+    | Disconnected
     | JavaScriptError JavaScript.Error
 
 
