@@ -6,6 +6,8 @@ import Json.Encode
 import Task
 
 
+{-| <https://developer.mozilla.org/en-US/docs/Web/API/WritableStreamDefaultWriter>
+-}
 type Writer
     = Writer Json.Decode.Value
 

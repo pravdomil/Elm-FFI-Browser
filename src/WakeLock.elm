@@ -6,6 +6,8 @@ import Json.Encode
 import Task
 
 
+{-| <https://developer.mozilla.org/en-US/docs/Web/API/WakeLock>
+-}
 type WakeLock
     = WakeLock Json.Decode.Value
 
