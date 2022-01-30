@@ -107,6 +107,34 @@ transferOut endpoint data a =
             )
 
 
+close : Device -> Task.Task Error ()
+close a =
+    JavaScript.run
+        "a.close()"
+        (a |> (\(Device v) -> v))
+        (Json.Decode.succeed ())
+        |> Task.mapError
+            (\v ->
+                case v of
+                    _ ->
+                        JavaScriptError v
+            )
+
+
+reset : Device -> Task.Task Error Device
+reset a =
+    JavaScript.run
+        "a.reset()"
+        (a |> (\(Device v) -> v))
+        (Json.Decode.succeed a)
+        |> Task.mapError
+            (\v ->
+                case v of
+                    _ ->
+                        JavaScriptError v
+            )
+
+
 
 --
 
