@@ -6,6 +6,8 @@ import Task
 import WritableStream.Writer
 
 
+{-| <https://developer.mozilla.org/en-US/docs/Web/API/WritableStream>
+-}
 type WritableStream
     = WritableStream Json.Decode.Value
 

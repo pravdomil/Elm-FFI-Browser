@@ -6,6 +6,8 @@ import Json.Encode
 import Task
 
 
+{-| <https://developer.mozilla.org/en-US/docs/Web/API/console>
+-}
 log : String -> Task.Task JavaScript.Error String
 log a =
     JavaScript.run "console.log(a)"
