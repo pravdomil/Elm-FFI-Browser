@@ -21,7 +21,15 @@ write data a =
             ]
         )
         (Json.Decode.succeed a)
-        |> Task.mapError toError
+        |> Task.mapError
+            (\v ->
+                case v of
+                    JavaScript.Exception "NetworkError" _ _ ->
+                        Disconnected
+
+                    _ ->
+                        JavaScriptError v
+            )
 
 
 close : Writer -> Task.Task Error ()
@@ -29,7 +37,12 @@ close (Writer a) =
     JavaScript.run "a.close()"
         a
         (Json.Decode.succeed ())
-        |> Task.mapError toError
+        |> Task.mapError
+            (\v ->
+                case v of
+                    _ ->
+                        JavaScriptError v
+            )
 
 
 
@@ -39,13 +52,3 @@ close (Writer a) =
 type Error
     = Disconnected
     | JavaScriptError JavaScript.Error
-
-
-toError : JavaScript.Error -> Error
-toError a =
-    case a of
-        JavaScript.Exception "NetworkError" _ _ ->
-            Disconnected
-
-        _ ->
-            JavaScriptError a
