@@ -17,6 +17,15 @@ request =
         Json.Encode.null
         (Json.Decode.value |> Json.Decode.map SerialPort)
         |> Task.mapError toError
+        |> Task.mapError
+            (\v ->
+                case v of
+                    JavaScriptError (JavaScript.Exception "NotFoundError" _ _) ->
+                        NothingSelected
+
+                    _ ->
+                        v
+            )
 
 
 writableStream : Options -> SerialPort -> Task.Task Error WritableStream
@@ -157,6 +166,7 @@ type Error
     = NotSupported
     | Busy
     | Disconnected
+    | NothingSelected
     | JavaScriptError JavaScript.Error
 
 
