@@ -4,6 +4,7 @@ import JavaScript
 import Json.Decode
 import Json.Encode
 import Task
+import WritableStream
 
 
 {-| <https://developer.mozilla.org/en-US/docs/Web/API/SerialPort>
@@ -30,7 +31,7 @@ request =
             )
 
 
-writableStream : Options -> SerialPort -> Task.Task Error WritableStream
+writableStream : Options -> SerialPort -> Task.Task Error WritableStream.WritableStream
 writableStream options (SerialPort a) =
     JavaScript.run "a.a.writable ? a.a.writable : a.a.open(a.b).then(_ => a.a.writable)"
         (Json.Encode.object
@@ -38,40 +39,8 @@ writableStream options (SerialPort a) =
             , ( "b", options |> encodeOptions )
             ]
         )
-        (Json.Decode.value |> Json.Decode.map WritableStream)
+        (Json.Decode.value |> Json.Decode.map WritableStream.WritableStream)
         |> Task.mapError toError
-
-
-
---
-
-
-type WritableStream
-    = WritableStream Json.Decode.Value
-
-
-write : String -> WritableStream -> Task.Task Error WritableStream
-write data a =
-    JavaScript.run "(async () => { var b = a.a.getWriter(); await b.write(new TextEncoder().encode(a.b)); b.close(); })()"
-        (Json.Encode.object
-            [ ( "a", a |> (\(WritableStream v) -> v) )
-            , ( "b", data |> Json.Encode.string )
-            ]
-        )
-        (Json.Decode.succeed a)
-        |> Task.mapError toError
-        |> Task.mapError
-            (\v ->
-                case v of
-                    JavaScriptError (JavaScript.Exception "TypeError" _ _) ->
-                        Busy
-
-                    JavaScriptError (JavaScript.Exception "NetworkError" _ _) ->
-                        Disconnected
-
-                    _ ->
-                        v
-            )
 
 
 
@@ -166,8 +135,6 @@ parityToString a =
 
 type Error
     = NotSupported
-    | Busy
-    | Disconnected
     | NothingSelected
     | JavaScriptError JavaScript.Error
 
