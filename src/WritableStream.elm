@@ -17,7 +17,15 @@ writer (WritableStream a) =
     JavaScript.run "a.getWriter()"
         a
         (Json.Decode.value |> Json.Decode.map WritableStream.Writer.Writer)
-        |> Task.mapError toError
+        |> Task.mapError
+            (\v ->
+                case v of
+                    JavaScript.Exception "TypeError" _ _ ->
+                        Busy
+
+                    _ ->
+                        JavaScriptError v
+            )
 
 
 
@@ -27,13 +35,3 @@ writer (WritableStream a) =
 type Error
     = Busy
     | JavaScriptError JavaScript.Error
-
-
-toError : JavaScript.Error -> Error
-toError a =
-    case a of
-        JavaScript.Exception "TypeError" _ _ ->
-            Busy
-
-        _ ->
-            JavaScriptError a

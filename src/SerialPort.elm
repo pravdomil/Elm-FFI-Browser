@@ -19,15 +19,17 @@ request =
         "navigator.serial.getPorts().then(a => a.length === 0 ? navigator.serial.requestPort() : a[0])"
         Json.Encode.null
         (Json.Decode.value |> Json.Decode.map SerialPort)
-        |> Task.mapError toError
         |> Task.mapError
             (\v ->
                 case v of
-                    JavaScriptError (JavaScript.Exception "NotFoundError" _ _) ->
+                    JavaScript.Exception "ReferenceError" _ _ ->
+                        NotSupported
+
+                    JavaScript.Exception "NotFoundError" _ _ ->
                         NothingSelected
 
                     _ ->
-                        v
+                        JavaScriptError v
             )
 
 
@@ -40,7 +42,12 @@ writableStream options (SerialPort a) =
             ]
         )
         (Json.Decode.value |> Json.Decode.map WritableStream.WritableStream)
-        |> Task.mapError toError
+        |> Task.mapError
+            (\v ->
+                case v of
+                    _ ->
+                        JavaScriptError v
+            )
 
 
 
@@ -137,13 +144,3 @@ type Error
     = NotSupported
     | NothingSelected
     | JavaScriptError JavaScript.Error
-
-
-toError : JavaScript.Error -> Error
-toError a =
-    case a of
-        JavaScript.Exception "ReferenceError" _ _ ->
-            NotSupported
-
-        _ ->
-            JavaScriptError a
