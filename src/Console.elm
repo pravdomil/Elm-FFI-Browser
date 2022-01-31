@@ -59,8 +59,8 @@ timeTask toError label a =
 
 
 taskAndThenWithResult : (Result x a -> Task.Task y b) -> Task.Task x a -> Task.Task y b
-taskAndThenWithResult next a =
+taskAndThenWithResult toTask a =
     a
         |> Task.map Ok
         |> Task.onError (Err >> Task.succeed)
-        |> Task.andThen next
+        |> Task.andThen toTask
