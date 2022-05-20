@@ -1,4 +1,4 @@
-module USB.Device exposing (..)
+module Usb.Device exposing (..)
 
 import JavaScript
 import Json.Decode
