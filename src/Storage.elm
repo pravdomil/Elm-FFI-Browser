@@ -27,14 +27,14 @@ type Storage
 get : Storage -> Task.Task JavaScript.Error (Maybe String)
 get a =
     JavaScript.run "(a.a ? sessionStorage : localStorage).getItem(a.b)"
-        (encode Nothing a)
+        (encode a Nothing)
         (Json.Decode.nullable Json.Decode.string)
 
 
-set : Maybe String -> Storage -> Task.Task JavaScript.Error ()
-set value a =
+set : Storage -> Maybe String -> Task.Task JavaScript.Error ()
+set storage a =
     JavaScript.run "a.c === null ? (a.a ? sessionStorage : localStorage).removeItem(a.b) : (a.a ? sessionStorage : localStorage).setItem(a.b, a.c)"
-        (encode value a)
+        (encode storage a)
         (Json.Decode.succeed ())
 
 
@@ -45,8 +45,8 @@ init =
         (Json.Decode.succeed ())
 
 
-onChange : msg -> (Maybe String -> msg) -> Storage -> Sub msg
-onChange noOperation toMsg storage =
+onChange : Storage -> msg -> (Maybe String -> msg) -> Sub msg
+onChange storage noOperation toMsg =
     let
         decoder : Json.Decode.Decoder ( Storage, Maybe String )
         decoder =
@@ -90,15 +90,15 @@ onChange noOperation toMsg storage =
 port localStorage : (Json.Decode.Value -> msg) -> Sub msg
 
 
-encode : Maybe String -> Storage -> Json.Encode.Value
-encode value a =
-    case a of
+encode : Storage -> Maybe String -> Json.Encode.Value
+encode storage a =
+    case storage of
         Local b ->
             Json.Encode.object
                 [ ( "a", Json.Encode.int 0 )
                 , ( "b", Json.Encode.string b )
                 , ( "c"
-                  , case value of
+                  , case a of
                         Just c ->
                             Json.Encode.string c
 
@@ -112,7 +112,7 @@ encode value a =
                 [ ( "a", Json.Encode.int 1 )
                 , ( "b", Json.Encode.string b )
                 , ( "c"
-                  , case value of
+                  , case a of
                         Just c ->
                             Json.Encode.string c
 
