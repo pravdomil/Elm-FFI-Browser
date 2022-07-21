@@ -27,14 +27,14 @@ type Storage
 get : Storage -> Task.Task JavaScript.Error (Maybe String)
 get a =
     JavaScript.run "(a.a ? sessionStorage : localStorage).getItem(a.b)"
-        (encode a Nothing)
+        (encode Nothing a)
         (Json.Decode.nullable Json.Decode.string)
 
 
-set : Storage -> Maybe String -> Task.Task JavaScript.Error ()
-set storage a =
+set : Maybe String -> Storage -> Task.Task JavaScript.Error ()
+set value a =
     JavaScript.run "a.c === null ? (a.a ? sessionStorage : localStorage).removeItem(a.b) : (a.a ? sessionStorage : localStorage).setItem(a.b, a.c)"
-        (encode storage a)
+        (encode value a)
         (Json.Decode.succeed ())
 
 
@@ -45,8 +45,8 @@ init =
         (Json.Decode.succeed ())
 
 
-onChange : Storage -> msg -> (Maybe String -> msg) -> Sub msg
-onChange storage noOperation toMsg =
+onChange : msg -> (Maybe String -> msg) -> Storage -> Sub msg
+onChange noOperation toMsg a =
     let
         decoder : Json.Decode.Decoder ( Storage, Maybe String )
         decoder =
@@ -73,7 +73,7 @@ onChange storage noOperation toMsg =
                 |> Result.toMaybe
                 |> Maybe.andThen
                     (\( x2, x3 ) ->
-                        if x2 == storage then
+                        if x2 == a then
                             Just (toMsg x3)
 
                         else
@@ -90,15 +90,15 @@ onChange storage noOperation toMsg =
 port localStorage : (Json.Decode.Value -> msg) -> Sub msg
 
 
-encode : Storage -> Maybe String -> Json.Encode.Value
-encode storage a =
-    case storage of
+encode : Maybe String -> Storage -> Json.Encode.Value
+encode value a =
+    case a of
         Local b ->
             Json.Encode.object
                 [ ( "a", Json.Encode.int 0 )
                 , ( "b", Json.Encode.string b )
                 , ( "c"
-                  , case a of
+                  , case value of
                         Just c ->
                             Json.Encode.string c
 
@@ -112,7 +112,7 @@ encode storage a =
                 [ ( "a", Json.Encode.int 1 )
                 , ( "b", Json.Encode.string b )
                 , ( "c"
-                  , case a of
+                  , case value of
                         Just c ->
                             Json.Encode.string c
 
