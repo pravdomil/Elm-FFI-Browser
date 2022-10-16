@@ -22,8 +22,8 @@ request filters =
         )
         (Json.Decode.value |> Json.Decode.map Device)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     JavaScript.Exception "ReferenceError" _ _ ->
                         NotSupported
 
@@ -31,7 +31,7 @@ request filters =
                         NothingSelected
 
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -42,10 +42,10 @@ open a =
         (a |> (\(Device v) -> v))
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -60,10 +60,10 @@ selectConfiguration value a =
         )
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -78,10 +78,10 @@ claimInterface number a =
         )
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -97,13 +97,13 @@ transferOut endpoint data a =
         )
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     JavaScript.Exception "AbortError" _ _ ->
                         TransferAborted
 
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -114,10 +114,10 @@ close a =
         (a |> (\(Device v) -> v))
         (Json.Decode.succeed ())
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -125,13 +125,13 @@ reset : Device -> Task.Task Error Device
 reset a =
     JavaScript.run
         "a.reset()"
-        (a |> (\(Device v) -> v))
+        (a |> (\(Device x) -> x))
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -158,7 +158,7 @@ encodeFilter a =
     , ( "protocolCode", a.protocolCode |> Maybe.map Json.Encode.int )
     , ( "serialNumber", a.serialNumber |> Maybe.map Json.Encode.string )
     ]
-        |> List.filterMap (\( v, v2 ) -> v2 |> Maybe.map (Tuple.pair v))
+        |> List.filterMap (\( x, x2 ) -> x2 |> Maybe.map (Tuple.pair x))
         |> Json.Encode.object
 
 
