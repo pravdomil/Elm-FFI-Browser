@@ -16,7 +16,7 @@ write : String -> Writer -> Task.Task Error Writer
 write data a =
     JavaScript.run "a.a.write(new TextEncoder().encode(a.b))"
         (Json.Encode.object
-            [ ( "a", a |> (\(Writer v) -> v) )
+            [ ( "a", a |> (\(Writer x) -> x) )
             , ( "b", data |> Json.Encode.string )
             ]
         )

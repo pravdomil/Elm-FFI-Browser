@@ -39,7 +39,7 @@ open : Device -> Task.Task Error Device
 open a =
     JavaScript.run
         "a.open()"
-        (a |> (\(Device v) -> v))
+        (a |> (\(Device x) -> x))
         (Json.Decode.succeed a)
         |> Task.mapError
             (\x ->
@@ -54,7 +54,7 @@ selectConfiguration value a =
     JavaScript.run
         "a.a.selectConfiguration(a.b)"
         (Json.Encode.object
-            [ ( "a", a |> (\(Device v) -> v) )
+            [ ( "a", a |> (\(Device x) -> x) )
             , ( "b", value |> Json.Encode.int )
             ]
         )
@@ -72,7 +72,7 @@ claimInterface number a =
     JavaScript.run
         "a.a.claimInterface(a.b)"
         (Json.Encode.object
-            [ ( "a", a |> (\(Device v) -> v) )
+            [ ( "a", a |> (\(Device x) -> x) )
             , ( "b", number |> Json.Encode.int )
             ]
         )
@@ -90,7 +90,7 @@ transferOut endpoint data a =
     JavaScript.run
         "a.a.transferOut(a.b, new TextEncoder().encode(a.c))"
         (Json.Encode.object
-            [ ( "a", a |> (\(Device v) -> v) )
+            [ ( "a", a |> (\(Device x) -> x) )
             , ( "b", endpoint |> Json.Encode.int )
             , ( "c", data |> Json.Encode.string )
             ]
@@ -111,7 +111,7 @@ close : Device -> Task.Task Error ()
 close a =
     JavaScript.run
         "a.close()"
-        (a |> (\(Device v) -> v))
+        (a |> (\(Device x) -> x))
         (Json.Decode.succeed ())
         |> Task.mapError
             (\x ->
