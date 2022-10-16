@@ -18,10 +18,10 @@ acquire =
         Json.Encode.null
         (Json.Decode.value |> Json.Decode.map WakeLock)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -31,10 +31,10 @@ release (WakeLock a) =
         a
         (Json.Decode.succeed ())
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 

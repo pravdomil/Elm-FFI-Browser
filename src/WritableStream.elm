@@ -18,13 +18,13 @@ writer (WritableStream a) =
         a
         (Json.Decode.value |> Json.Decode.map WritableStream.Writer.Writer)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     JavaScript.Exception "TypeError" _ _ ->
                         Busy
 
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
