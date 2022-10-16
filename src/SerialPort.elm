@@ -20,8 +20,8 @@ request =
         Json.Encode.null
         (Json.Decode.value |> Json.Decode.map SerialPort)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     JavaScript.Exception "ReferenceError" _ _ ->
                         NotSupported
 
@@ -29,7 +29,7 @@ request =
                         NothingSelected
 
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -43,10 +43,10 @@ writableStream options (SerialPort a) =
         )
         (Json.Decode.value |> Json.Decode.map WritableStream.WritableStream)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
