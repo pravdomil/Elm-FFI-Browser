@@ -10,18 +10,18 @@ import Task
 import Task.Extra
 
 
-log : String -> Task.Task JavaScript.Error String
+log : String -> Task.Task JavaScript.Error ()
 log a =
     JavaScript.run "console.log(a)"
         (Json.Encode.string a)
-        (Json.Decode.succeed a)
+        (Json.Decode.succeed ())
 
 
-logError : String -> Task.Task JavaScript.Error String
+logError : String -> Task.Task JavaScript.Error ()
 logError a =
     JavaScript.run "console.error(a)"
         (Json.Encode.string a)
-        (Json.Decode.succeed a)
+        (Json.Decode.succeed ())
 
 
 
