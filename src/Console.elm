@@ -7,6 +7,7 @@ import JavaScript
 import Json.Decode
 import Json.Encode
 import Task
+import Task.Extra
 
 
 log : String -> Task.Task JavaScript.Error String
@@ -21,6 +22,10 @@ logError a =
     JavaScript.run "console.error(a)"
         (Json.Encode.string a)
         (Json.Decode.succeed a)
+
+
+
+--
 
 
 time : String -> Task.Task JavaScript.Error ()
@@ -44,7 +49,7 @@ timeTask toError label a =
         |> Task.andThen
             (\_ ->
                 a
-                    |> taskAndThenWithResult
+                    |> Task.Extra.andAlwaysThen
                         (\v ->
                             timeEnd label
                                 |> Task.mapError toError
@@ -59,15 +64,3 @@ timeTask toError label a =
                                     )
                         )
             )
-
-
-
---
-
-
-taskAndThenWithResult : (Result x a -> Task.Task y b) -> Task.Task x a -> Task.Task y b
-taskAndThenWithResult toTask a =
-    a
-        |> Task.map Ok
-        |> Task.onError (Err >> Task.succeed)
-        |> Task.andThen toTask
