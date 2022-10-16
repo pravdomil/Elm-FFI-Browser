@@ -22,13 +22,13 @@ write data a =
         )
         (Json.Decode.succeed a)
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     JavaScript.Exception "NetworkError" _ _ ->
                         Disconnected
 
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
@@ -38,10 +38,10 @@ close (Writer a) =
         a
         (Json.Decode.succeed ())
         |> Task.mapError
-            (\v ->
-                case v of
+            (\x ->
+                case x of
                     _ ->
-                        JavaScriptError v
+                        JavaScriptError x
             )
 
 
