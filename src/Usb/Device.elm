@@ -99,7 +99,7 @@ transferOut endpoint data a =
         |> Task.mapError
             (\x ->
                 case x of
-                    JavaScript.Exception "AbortError" _ _ ->
+                    JavaScript.Exception (JavaScript.ErrorName "AbortError") _ _ ->
                         TransferAborted
 
                     _ ->
