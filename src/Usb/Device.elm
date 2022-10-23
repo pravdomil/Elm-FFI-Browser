@@ -24,10 +24,10 @@ request filters =
         |> Task.mapError
             (\x ->
                 case x of
-                    JavaScript.Exception "ReferenceError" _ _ ->
+                    JavaScript.Exception (JavaScript.ErrorName "ReferenceError") _ _ ->
                         NotSupported
 
-                    JavaScript.Exception "NotFoundError" _ _ ->
+                    JavaScript.Exception (JavaScript.ErrorName "NotFoundError") _ _ ->
                         NothingSelected
 
                     _ ->
