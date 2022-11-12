@@ -21,7 +21,7 @@ acquire =
             (\x ->
                 case x of
                     JavaScript.Exception (JavaScript.ErrorName "NotAllowedError") _ _ ->
-                        PageNotActive
+                        PageNotVisible
 
                     _ ->
                         JavaScriptError x
@@ -46,5 +46,5 @@ release (WakeLock a) =
 
 
 type Error
-    = PageNotActive
+    = PageNotVisible
     | JavaScriptError JavaScript.Error
