@@ -20,6 +20,9 @@ acquire =
         |> Task.mapError
             (\x ->
                 case x of
+                    JavaScript.Exception (JavaScript.ErrorName "NotAllowedError") _ _ ->
+                        PageNotActive
+
                     _ ->
                         JavaScriptError x
             )
@@ -43,4 +46,5 @@ release (WakeLock a) =
 
 
 type Error
-    = JavaScriptError JavaScript.Error
+    = PageNotActive
+    | JavaScriptError JavaScript.Error
