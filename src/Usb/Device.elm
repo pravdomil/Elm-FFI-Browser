@@ -44,6 +44,9 @@ open a =
         |> Task.mapError
             (\x ->
                 case x of
+                    JavaScript.Exception (JavaScript.ErrorName "NotFoundError") _ _ ->
+                        DeviceDisconnected
+
                     _ ->
                         JavaScriptError x
             )
@@ -169,5 +172,6 @@ encodeFilter a =
 type Error
     = NotSupported
     | NothingSelected
+    | DeviceDisconnected
     | TransferAborted
     | JavaScriptError JavaScript.Error
