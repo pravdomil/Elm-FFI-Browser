@@ -49,20 +49,6 @@ open a =
             )
 
 
-isOpen : Device -> Task.Task Error Bool
-isOpen a =
-    JavaScript.run
-        "a.opened"
-        (a |> (\(Device x) -> x))
-        Json.Decode.bool
-        |> Task.mapError
-            (\x ->
-                case x of
-                    _ ->
-                        JavaScriptError x
-            )
-
-
 selectConfiguration : Int -> Device -> Task.Task Error Device
 selectConfiguration value a =
     JavaScript.run
