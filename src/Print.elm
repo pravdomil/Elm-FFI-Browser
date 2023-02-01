@@ -1,4 +1,4 @@
-module Print exposing (..)
+port module Print exposing (..)
 
 import JavaScript
 import Json.Decode
