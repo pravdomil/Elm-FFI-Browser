@@ -7,6 +7,13 @@ import Json.Encode
 import Task
 
 
+blur : Task.Task JavaScript.Error ()
+blur =
+    JavaScript.run "document.activeElement ? document.activeElement.blur() : null"
+        Json.Encode.null
+        (Json.Decode.succeed ())
+
+
 openInNewWindow : String -> Task.Task JavaScript.Error ()
 openInNewWindow a =
     JavaScript.run "window.open(a, '_blank')"
