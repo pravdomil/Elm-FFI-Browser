@@ -65,22 +65,22 @@ onChange noOperation toMsg a =
                         )
                 )
                 (Json.Decode.at [ "b", "newValue" ] (Json.Decode.nullable Json.Decode.string))
-    in
-    localStorage
-        (\x ->
-            x
-                |> Json.Decode.decodeValue decoder
-                |> Result.toMaybe
-                |> Maybe.andThen
-                    (\( x2, x3 ) ->
-                        if x2 == a then
-                            Just (toMsg x3)
 
-                        else
-                            Nothing
-                    )
-                |> Maybe.withDefault noOperation
-        )
+        toMsg : Json.Decode.Value -> msg
+        toMsg b =
+            case Json.Decode.decodeValue decoder b of
+                Ok ( c, d ) ->
+                    case c == a of
+                        True ->
+                            toMsg d
+
+                        False ->
+                            noOperation
+
+                Err _ ->
+                    noOperation
+    in
+    localStorage toMsg
 
 
 
