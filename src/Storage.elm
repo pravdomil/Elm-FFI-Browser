@@ -26,7 +26,7 @@ type Storage
 
 get : Storage -> Task.Task JavaScript.Error (Maybe String)
 get a =
-    JavaScript.run "(a.a ? sessionStorage : localStorage).getItem(a.b)"
+    JavaScript.run "(a[0] ? sessionStorage : localStorage).getItem(a[1])"
         (encode Nothing a)
         (Json.Decode.nullable Json.Decode.string)
 
