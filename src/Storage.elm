@@ -94,29 +94,25 @@ encode : Maybe String -> Storage -> Json.Encode.Value
 encode value a =
     case a of
         Local b ->
-            Json.Encode.object
-                [ ( "a", Json.Encode.int 0 )
-                , ( "b", Json.Encode.string b )
-                , ( "c"
-                  , case value of
-                        Just c ->
-                            Json.Encode.string c
+            Json.Encode.list identity
+                [ Json.Encode.int 0
+                , Json.Encode.string b
+                , case value of
+                    Just c ->
+                        Json.Encode.string c
 
-                        Nothing ->
-                            Json.Encode.null
-                  )
+                    Nothing ->
+                        Json.Encode.null
                 ]
 
         Session b ->
-            Json.Encode.object
-                [ ( "a", Json.Encode.int 1 )
-                , ( "b", Json.Encode.string b )
-                , ( "c"
-                  , case value of
-                        Just c ->
-                            Json.Encode.string c
+            Json.Encode.list identity
+                [ Json.Encode.int 1
+                , Json.Encode.string b
+                , case value of
+                    Just c ->
+                        Json.Encode.string c
 
-                        Nothing ->
-                            Json.Encode.null
-                  )
+                    Nothing ->
+                        Json.Encode.null
                 ]
