@@ -33,7 +33,7 @@ get a =
 
 set : Maybe String -> Storage -> Task.Task JavaScript.Error ()
 set value a =
-    JavaScript.run "a.c === null ? (a.a ? sessionStorage : localStorage).removeItem(a.b) : (a.a ? sessionStorage : localStorage).setItem(a.b, a.c)"
+    JavaScript.run "a[2] === null ? (a[0] ? sessionStorage : localStorage).removeItem(a[1]) : (a[0] ? sessionStorage : localStorage).setItem(a[1], a[2])"
         (encode value a)
         (Json.Decode.succeed ())
 
