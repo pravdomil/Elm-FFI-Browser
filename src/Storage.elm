@@ -52,18 +52,18 @@ onChange noOperation toMsg a =
         decoder =
             Json.Decode.map2
                 Tuple.pair
-                (Json.Decode.index 0 Json.Decode.bool
-                    |> Json.Decode.andThen
-                        (\x ->
-                            Json.Decode.at [ "b", "key" ] Json.Decode.string
-                                |> Json.Decode.map
-                                    (if x then
-                                        Session
+                (Json.Decode.andThen
+                    (\x ->
+                        Json.Decode.at [ "b", "key" ] Json.Decode.string
+                            |> Json.Decode.map
+                                (if x then
+                                    Session
 
-                                     else
-                                        Local
-                                    )
-                        )
+                                 else
+                                    Local
+                                )
+                    )
+                    (Json.Decode.index 0 Json.Decode.bool)
                 )
                 (Json.Decode.index 1 (Json.Decode.field "newValue" (Json.Decode.nullable Json.Decode.string)))
 
