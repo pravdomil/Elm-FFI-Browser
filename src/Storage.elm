@@ -66,8 +66,8 @@ onChange noOperation toMsg a =
                 )
                 (Json.Decode.at [ "b", "newValue" ] (Json.Decode.nullable Json.Decode.string))
 
-        toMsg : Json.Decode.Value -> msg
-        toMsg b =
+        toMsg_ : Json.Decode.Value -> msg
+        toMsg_ b =
             case Json.Decode.decodeValue decoder b of
                 Ok ( c, d ) ->
                     case c == a of
@@ -80,7 +80,7 @@ onChange noOperation toMsg a =
                 Err _ ->
                     noOperation
     in
-    localStorage toMsg
+    localStorage toMsg_
 
 
 
