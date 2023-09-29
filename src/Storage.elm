@@ -61,7 +61,7 @@ onChange noOperation toMsg a =
                              else
                                 Local
                             )
-                            (Json.Decode.at [ "b", "key" ] Json.Decode.string)
+                            (Json.Decode.index 1 (Json.Decode.field "key" Json.Decode.string))
                     )
                     (Json.Decode.index 0 Json.Decode.bool)
                 )
