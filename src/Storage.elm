@@ -40,7 +40,7 @@ set value a =
 
 init : Task.Task JavaScript.Error ()
 init =
-    JavaScript.run "addEventListener('storage', function(e) { scope.ports.localStorage.send({ a: e.storageArea === sessionStorage, b: e }) })"
+    JavaScript.run "addEventListener('storage', function(e) { scope.ports.localStorage.send([e.storageArea === sessionStorage, e]) })"
         Json.Encode.null
         (Json.Decode.succeed ())
 
