@@ -54,14 +54,14 @@ onChange noOperation toMsg a =
                 Tuple.pair
                 (Json.Decode.andThen
                     (\x ->
-                        Json.Decode.at [ "b", "key" ] Json.Decode.string
-                            |> Json.Decode.map
-                                (if x then
-                                    Session
+                        Json.Decode.map
+                            (if x then
+                                Session
 
-                                 else
-                                    Local
-                                )
+                             else
+                                Local
+                            )
+                            (Json.Decode.at [ "b", "key" ] Json.Decode.string)
                     )
                     (Json.Decode.index 0 Json.Decode.bool)
                 )
