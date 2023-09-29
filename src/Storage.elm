@@ -31,10 +31,10 @@ get a =
         (Json.Decode.nullable Json.Decode.string)
 
 
-set : Maybe String -> Storage -> Task.Task JavaScript.Error ()
-set value a =
+set : Storage -> Maybe String -> Task.Task JavaScript.Error ()
+set storage a =
     JavaScript.run "a[2] === null ? (a[0] ? sessionStorage : localStorage).removeItem(a[1]) : (a[0] ? sessionStorage : localStorage).setItem(a[1], a[2])"
-        (encode value a)
+        (encode a storage)
         (Json.Decode.succeed ())
 
 
