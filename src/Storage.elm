@@ -50,8 +50,9 @@ onChange noOperation toMsg a =
     let
         decoder : Json.Decode.Decoder ( Storage, Maybe String )
         decoder =
-            Json.Decode.map2 Tuple.pair
-                (Json.Decode.field "a" Json.Decode.bool
+            Json.Decode.map2
+                Tuple.pair
+                (Json.Decode.index 0 Json.Decode.bool
                     |> Json.Decode.andThen
                         (\x ->
                             Json.Decode.at [ "b", "key" ] Json.Decode.string
@@ -64,7 +65,7 @@ onChange noOperation toMsg a =
                                     )
                         )
                 )
-                (Json.Decode.at [ "b", "newValue" ] (Json.Decode.nullable Json.Decode.string))
+                (Json.Decode.index 1 (Json.Decode.field "newValue" (Json.Decode.nullable Json.Decode.string)))
 
         toMsg_ : Json.Decode.Value -> msg
         toMsg_ b =
